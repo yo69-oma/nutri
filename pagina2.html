@@ -1,43 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        .button2 {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        .button2:hover {
-            background-color: #9500a2;
-        }
-    </style>
-    <style>
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        .button:hover {
-            background-color: #9500a2;
-        }
-    </style>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página 2</title>
-</head>
-<body>
-    <h1>Página 2</h1>
-    <p>Aqui seleccionaras que grupo de alimentos, para poder darte la de</p>
-    <a href="pagina3p2.html" class="button">verduras</a>
-<body>
-<a href="pagina4p2.html" class="button">frutas</a>
+    <body>
+        <form id="formulario" action="" method="GET">
+            <label for="opciones">Selecciona:</label>
+            <select id="opciones" name="opcion" onchange="redirectToPage()">
+              <option value="">Selecciona una opción</option>
+              <option value="pagina3p2.html">Opción 1</option>
+              <option value="pagina4p2.html">Opción 2</option>
+              <option value="pagina3.html">Opción 3</option>
+            </select>
+          </form>
+          
+          <script>
+          function redirectToPage() {
+            var selectedOption = document.getElementById("opciones").value;
+            if (selectedOption) {
+              window.location.href = selectedOption;
+            }
+          }
+          </script>
 </body>
 </html>
+
