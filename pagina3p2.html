@@ -11,11 +11,27 @@
             width: auto;
             height: 800px;
             display: inline; /* Asegura que la imagen se comporte como un bloque */
-            margin: 0 auto; /* Centra la imagen horizontalmente */
-            position: block;
+            position: relative;
+            left: -50px;
+            top: -20px;
+        }
+        .text-overlay {
+            position: absolute;
+            bottom: 80px; /* Ajusta la posición vertical del texto */
+            left: 50px; /* Ajusta la posición horizontal del texto */
+            top:50px;
+            background-color: rgba(0, 0, 0, 0); /* Fondo semi-transparente */
+            color: rgb(0, 0, 0); /* Color del texto */
+            padding: 15px; /* Espaciado interno del texto */
+            font-size: 25px; /* Tamaño de fuente del texto */
         }
     </style>
 </head>
-    <img src="https://i.pinimg.com/564x/f5/b5/19/f5b51978826e04caae1d3e3145079589.jpg" alt="Descripción de la imagen" width="388" height="800">
+<div class="container"></div>
+    <img src="https://i.pinimg.com/564x/b7/13/36/b713362ef9e18503afb4d7215d7e2a8f.jpg" alt="Descripción de la imagen" width="388" height="800">
+    <div class="text-overlay">
+        <h2>Título sobre la imagen</h2>
+    </div>
+</div>
 </body>
 </html>
