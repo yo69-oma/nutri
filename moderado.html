@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lista desplegable con redirección</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    ul, ol {
+        
+        margin-left: 10px;
+    }
+    li {
+        margin-bottom: 5px;
+    }
+   
+    .highlight {
+        background-color: #1bf2343b; /* Fondo azul claro */
+        padding: 3px 8px; /* Espaciado interno */
+        border-radius: 3px; /* Bordes redondeados */
+    }
+    .bold-text {
+        font-weight: bold;
+    }
+    .body {
+        
+        text-align: center;
+    }
+
+    
+</style>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+    .background {
+        background-image: url('https://i.pinimg.com/564x/56/f0/a2/56f0a2cc7ff313a7087260f7fb84758a.jpg');
+        background-size: cover;
+        background-position: center;
+        height: 100vh; /* Ajusta la altura como prefieras */
+        position: relative; /* Para que los elementos hijos se posicionen relativos a este */
+    }
+    .select-container {
+        position: absolute;
+        top: 300px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(255, 255, 255, 0.403); /* Color de fondo semi-transparente */
+        padding: 20px;
+        max-width: 500px; /* Ancho máximo del select */
+        width: 100%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    }
+    .select-container select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ffffff61;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #ffffff66; /* Fondo del select */
+        color: #000000; /* Color del texto del select */
+        appearance: none; /* Elimina el estilo nativo del select */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+    .button {
+            display: inline-block;
+            padding: 7px 10px;
+            background-color: #f462ea;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 600px;
+        }
+        .button:hover {
+            background-color: #f9f9f9;
+        }
+</style>
+
+</head>
+<body>
+    <div class="background">
+        <a href="AOA.html" class="button">regresar</a>
+        <div class="select-container">
+            <div class="text-overlay">
+              <h2 class="body">Alimentos de Origen Animal</h2>
+              <p class="body">Grasas moderada</p>
+              <p class="body">Se recomiendan de 2 a 3 porciones diarias </p>
+              <ol  >
+               <li class="bold-text">Bistec de bola 25 gramos</li>
+<li class="bold-text">Costillar de cerdo 50 gramos</li>
+<li class="bold-text">Huevo 1 pieza</li>
+<li class="bold-text">Queso blanco 35 gramos</li>
+<li class="bold-text">Salchicha de pavo 6 rebanadas</li>
+<li class="bold-text">Sardinas en aceite 3 piezas</li>
+<li class="bold-text">Suadero crudo 29 gramos </li>
+<li class="bold-text">Queso parmesano 3 ½ cda</li> 
+<li class="bold-text">Pecho de res 50 gramos</li>
+<li class="bold-text">Filete de salmon 30 gramos</li>
+</ol>
+          </div>
+        </div>
+    </div>
+</body>
+</html>
