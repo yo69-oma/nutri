@@ -6,10 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NUTRILECHE</title>
     <style>
-        .gif-container {
-    position: absolute; /* Posición absoluta para que se mueva libremente */
-    pointer-events: none; /* Evita que el mouse interactúe con el contenedor */
+      .gif-container {
+    position: relative; 
+    pointer-events: none; 
+    left: -40px;
+    
   }
+    </style>
+    <style>
+        
+  
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -37,57 +44,59 @@
         }
     </style>
 </head>
+
 <body>
-    <div class="gif-container">
-        <img src="https://i.pinimg.com/originals/d0/77/39/d07739951659b0077f303d3f9453463d.gif" alt="GIF animado" id="gif">
-      </div>
       
-      <script>
-        // Función para mover el GIF por la pantalla
-        function moverGif() {
-          var gif = document.getElementById('gif');
-          var posX = 0, posY = 0;
-          var incX = 50, incY = 3; // Incrementos de movimiento en píxeles
-      
-          // Función para actualizar la posición del GIF
-          function updatePosition() {
-            gif.style.left = posX + '100px';
-            gif.style.top = posY + '50px';
-          }
-      
-          // Función para animar el movimiento
-          function move() {
-            posX += incX;
-            posY += incY;
-      
-            // Limitar el movimiento dentro de los límites de la ventana
-            var windowWidth = window.innerWidth - gif.width;
-            var windowHeight = window.innerHeight - gif.height;
-      
-            if (posX < 0 || posX > windowWidth) {
-              incX = -incX;
-            }
-            if (posY < 0 || posY > windowHeight) {
-              incY = -incY;
-            }
-      
-            updatePosition();
-            requestAnimationFrame(move);
-          }
-      
-          move(); // Iniciar la animación del movimiento
-        }
-      
-        // Llamar a la función para mover el GIF cuando se cargue la página
-        window.onload = function() {
-          moverGif();
-        };
-      </script>
-    <h1>NUTRILCHE</h1>
+     
+    <h1>NUTRILECHE</h1>
     <p>Bienvenido a mi aplicación </p>
-    <a href="pagina2.html" class="button">Botón de Ejemplo</a>
+    <p>Aqui te daremos las raciones recomendadas del grupo de alimentos que selecciones</p>
+    <a href="pagina2.html" class="button">siguiente</a>
+</body>
+<body>
+  <div class="gif-container">
+    <img src="https://i.pinimg.com/originals/d0/77/39/d07739951659b0077f303d3f9453463d.gif" alt="GIF animado" id="gif">
+  </div>
+  <script>
+    function moverGif() {
+      var gif = document.getElementById('gif');
+      var posX = 0, posY = 0;
+      var incX = 10, incY = 10; 
+
+      function updatePosition() {
+        gif.style.left = posX + '100px';
+        gif.style.top = posY + '30px';
+      }
+  
+      function move() {
+        posX += incX;
+        posY += incY;
+  
+        var windowWidth = window.innerWidth - gif.width;
+        var windowHeight = window.innerHeight - gif.height;
+  
+        if (posX < 0 || posX > windowWidth) {
+          incX = -incX;
+        }
+        if (posY < 0 || posY > windowHeight) {
+          incY = -incY;
+        }
+  
+        updatePosition();
+        requestAnimationFrame(move);
+      }
+  
+      move(); 
+    }
+  
+    window.onload = function() {
+      moverGif();
+    };
+  </script>
 </body>
 </html>
+
+ 
 
  
 
