@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lista desplegable con redirección</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    ul, ol {
+        
+        margin-left: 10px;
+    }
+    li {
+        margin-bottom: 5px;
+    }
+   
+    .highlight {
+        background-color: #1bf2343b; /* Fondo azul claro */
+        padding: 3px 8px; /* Espaciado interno */
+        border-radius: 3px; /* Bordes redondeados */
+    }
+    .bold-text {
+        font-weight: bold;
+    }
+    .body {
+        
+        text-align: center;
+    }
+
+    
+</style>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+    .background {
+        background-image: url('https://i.pinimg.com/564x/2b/d9/f1/2bd9f181849dab1011a68d334cebc3f4.jpg');
+        background-size: cover;
+        background-position: center;
+        height: 100vh; /* Ajusta la altura como prefieras */
+        position: relative; /* Para que los elementos hijos se posicionen relativos a este */
+    }
+    .select-container {
+        position: absolute;
+        top: 300px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(255, 255, 255, 0.403); /* Color de fondo semi-transparente */
+        padding: 20px;
+        max-width: 500px; /* Ancho máximo del select */
+        width: 100%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    }
+    .select-container select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ffffff61;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #ffffff66; /* Fondo del select */
+        color: #000000; /* Color del texto del select */
+        appearance: none; /* Elimina el estilo nativo del select */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+    .button {
+            display: inline-block;
+            padding: 7px 10px;
+            background-color: #f462ea;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 600px;
+        }
+        .button:hover {
+            background-color: #f9f9f9;
+        }
+</style>
+<style>
+    .button3 {
+            display: inline-block;
+            padding: 7px 10px;
+            background-color: #62f478;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 200px;
+        }
+        .button3:hover {
+            background-color: #f9f9f9;
+        }
+        .button4 {
+            display: inline-block;
+            padding: 7px 10px;
+            background-color: #62f478;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 600px;
+        }
+        .button4:hover {
+            background-color: #f9f9f9;
+        }
+        
+</style>
+
+</head>
+<body>
+    <div class="background">
+        <a href="pagina2.html" class="button">regresar</a>
+        <a href="semi.html" class="button3">semi</a>
+        <a href="entera.html" class="button4">entera</a>
+        <div class="select-container">
+            <div class="text-overlay">
+              <h2 class="body">Leche</h2>
+              <p class="body">Descremada</p>
+              <p class="body">Se recomiendan 2 porciones diarias </p>
+              <ol  >
+               <li class="bold-text">eche alpura light extra 1 tza</li>
+<li class="bold-text">Leche descremada 1 taza</li>
+<li class="bold-text">Leche descremada en polvo  cda </li>
+<li class="bold-text">Leche light extra 1 taza</li>
+<li class="bold-text">Leche evaporada descremada</li> 
+</ol>
+<p>Aqui otras opciones de leche</p>
+          </div>
+        </div>
+    </div>
+</body>
+</html>
