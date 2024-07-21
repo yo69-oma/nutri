@@ -1,43 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imagen Responsiva</title>
-    <style> 
-     
-    img {
-            max-width: 500%;
-            width: auto;
-            height: 800px;
-            display: inline; /* Asegura que la imagen se comporte como un bloque */
-            position: relative;
-            left: -50px;
-            top: 0px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lista desplegable con redirección</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+    .background {
+        background-image: url('https://i.pinimg.com/564x/f5/b5/19/f5b51978826e04caae1d3e3145079589.jpg');
+        background-size: cover;
+        background-position: center;
+        height: 100vh; /* Ajusta la altura como prefieras */
+        position: relative; /* Para que los elementos hijos se posicionen relativos a este */
+    }
+    .select-container {
+        position: absolute;
+        top: 250px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(255, 255, 255, 0.8); /* Color de fondo semi-transparente */
+        padding: 20px;
+        max-width: 200px; /* Ancho máximo del select */
+        width: 100%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+    }
+    .select-container select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #fff; /* Fondo del select */
+        color: #333; /* Color del texto del select */
+        appearance: none; /* Elimina el estilo nativo del select */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+</style>
+<script>
+    function redirectToPage() {
+        var select = document.getElementById("mySelect");
+        var selectedOption = select.options[select.selectedIndex].value;
+        if (selectedOption !== "") {
+            window.location.href = selectedOption; // Redirige a la página seleccionada
         }
-    </style>
-    <body>
-        <form id="formulario" action="" method="GET">
-            <label for="opciones">Selecciona:</label>
-            <select id="opciones" name="opcion" onchange="redirectToPage()">
-              <option value="">Selecciona una opción</option>
-              <option value="pagina3p2.html">Opción 1</option>
-              <option value="pagina4p2.html">Opción 2</option>
-              <option value="pagina3.html">Opción 3</option>
+    }
+</script>
+</head>
+
+<body>
+    <div class="background">
+        <div class="select-container">
+          <div class="text-overlay">
+        </div>
+            <h2>Grupo de alimentos</h2>
+            <p>sobre cual grupo te interesaria saber </p>
+            <select id="mySelect" onchange="redirectToPage()">
+                <option value="">Selecciona una opción</option>
+                <option value="pagina3p2.html">Verduras</option>
+                <option value="pagina4p2.html">Frutas</option>
+                <option value="pagina5p2.html">Cereales</option>
+                <option value="leguminosas.html">Leguminosas</option>
+                <option value="AOA.html">AOA</option>
+                <option value="leche.html">Leche</option>
+                <option value="aceites.html">Aceites y Grasas</option>
+                <option value="azucar.html">Azucar</option>
             </select>
-          </form>
-          
-          <script>
-          function redirectToPage() {
-            var selectedOption = document.getElementById("opciones").value;
-            if (selectedOption) {
-              window.location.href = selectedOption;
-            }
-          }
-          </script>
-          </head>
-          <img src="https://i.pinimg.com/564x/f5/b5/19/f5b51978826e04caae1d3e3145079589.jpg" alt="Descripción de la imagen" width="388" height="800">
+            
+        </div>
+    </div>
 </body>
 </html>
+
 
 
