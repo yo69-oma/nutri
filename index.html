@@ -48,56 +48,14 @@
 <body>
       
      
-    <h1>NUTRILECHE</h1>
-    <p>Bienvenido a mi aplicación </p>
-    <p>Aqui te daremos las raciones recomendadas del grupo de alimentos que selecciones</p>
+    <h1>Uniride</h1>
+   
     <a href="pagina2.html" class="button">siguiente</a>
 </body>
-<body>
-  <div class="gif-container">
-    <img src="https://i.pinimg.com/originals/d0/77/39/d07739951659b0077f303d3f9453463d.gif" alt="GIF animado" id="gif">
-  </div>
-  <script>
-    function moverGif() {
-      var gif = document.getElementById('gif');
-      var posX = 0, posY = 0;
-      var incX = 10, incY = 10; 
 
-      function updatePosition() {
-        gif.style.left = posX + '100px';
-        gif.style.top = posY + '30px';
-      }
   
-      function move() {
-        posX += incX;
-        posY += incY;
-  
-        var windowWidth = window.innerWidth - gif.width;
-        var windowHeight = window.innerHeight - gif.height;
-  
-        if (posX < 0 || posX > windowWidth) {
-          incX = -incX;
-        }
-        if (posY < 0 || posY > windowHeight) {
-          incY = -incY;
-        }
-  
-        updatePosition();
-        requestAnimationFrame(move);
-      }
-  
-      move(); 
-    }
-  
-    window.onload = function() {
-      moverGif();
-    };
   </script>
 </body>
 </html>
-
- 
-
- 
 
  
