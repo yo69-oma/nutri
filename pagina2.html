@@ -1,31 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="srcipt.js"></script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>registro</title>
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro</title>
+  <style>
     body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            padding: 20px;
-            text-align: center;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      text-align: center;
+      padding: 0;
     }
-    h1{
- color: #333333;
+
+    h1 {
+      color: #000;
+      margin-top: 40px;
     }
-   
-    
-</style>
- 
+
+    .select-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.125);
+      padding: 20px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    textarea {
+      width: 40%;
+      height: 25px;
+      padding: 8px;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      border: 1px solid #000000;
+      border-radius: 5px;
+      resize: none;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 8px 20px;
+      background-color: #000000;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #333;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
- <h1>registro</h1>
+
+<h1>Registro</h1>
+
+
+  <textarea id="idInput" placeholder="Escribe tu ID universitario"></textarea>
+  <br>
+  <button class="button" onclick="validarID()">Entrar</button>
+  <div id="mensaje" class="message">
     
-   </body>
+    </div>
+    
+</div>
+
+<script>
+
+  const idsValidos = ["12345"];
+
+  function validarID() {
+    const inputID = document.getElementById("idInput").value.trim();
+    const mensaje = document.getElementById("mensaje");
+
+    if (idsValidos.includes(inputID)) {
+      mensaje.style.color = "green";
+      mensaje.textContent = "✅ ID válido. Redirigiendo...";
+   
+      setTimeout(() => {
+        window.location.href = "pagina3p2.html";
+      }, 1500);
+    } else {
+      mensaje.style.color = "red";
+      mensaje.textContent = "❌ ID incorrecto. Intenta de nuevo.";
+    }
+  }
 </script>
+
 </body>
 </html>
+
