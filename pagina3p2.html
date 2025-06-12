@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lista desplegable con redirección</title>
+<title>eleccion</title>
 <style>
     body {
         font-family: Arial, sans-serif;
     }
     ul, ol {
-        margin-left: 10px;
+        margin-left: 20px;
     }
     li {
         margin-bottom: 5px;
@@ -21,6 +21,8 @@
         
             text-align: center;
         }
+    
+       
 
 </style>
 <style>
@@ -28,45 +30,49 @@
         margin: 0;
         font-family: Arial, sans-serif;
     }
-    .background {
-        background-image: url('https://i.pinimg.com/564x/c3/71/3b/c3713b6ba3494611237666edb4220b57.jpg');
-        background-size: cover;
-        background-position: center;
-        height: 100vh; /* Ajusta la altura como prefieras */
-        position: relative; /* Para que los elementos hijos se posicionen relativos a este */
-    }
+    
     .select-container {
         position: absolute;
         top: 300px;
         left: 50%;
+        height: 300px;
         transform: translate(-50%, -50%);
-        background-color: rgba(255, 255, 255, 0.125); /* Color de fondo semi-transparente */
-        padding: 20px;
-        max-width: 500px; /* Ancho máximo del select */
-        width: 100%;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+        background-color: rgba(255, 255, 255, 0.125);
+        padding: 70px;
+        max-width: 300px;
+        width: 500%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
     }
+    .titulo {
+        font-size: 25px; 
+        color: #000000; 
+        font-weight: bold; 
+        margin-bottom: 15px;
+    }
+
     .select-container select {
-        width: 100%;
+        width: 100;
         padding: 10px;
         margin-bottom: 10px;
         border: 1px solid #ffffff2d;
-        border-radius: 5px;
+        border-radius: 7px;
         font-size: 16px;
-        background-color: #ffffff42; /* Fondo del select */
-        color: #333; /* Color del texto del select */
-        appearance: none; /* Elimina el estilo nativo del select */
+        background-color: #ffffff42;
+        color: #333;
+        appearance: none;
         -webkit-appearance: none;
         -moz-appearance: none;
     }
     .button {
             display: inline-block;
             padding: 7px 10px;
-            background-color: #f462ea;
-            color: #000000;
+            background-color: #000000;
+            color: #ffffff;
             text-decoration: none;
             border-radius: 4px;
-            margin-top: 600px;
+            margin-top: 400px;
+            margin-left: 250px ;
         }
         .button:hover {
             background-color: #f9f9f9;
@@ -75,29 +81,33 @@
 
 </head>
 <body>
-    
-    <div class="background">
-        <a href="pagina2.html" class="button">regresar</a>
-        <div class="select-container">
-            <div class="text-overlay">
-              <h2 class="body">Verduras</h2>
-              <p class="body">Se recomiendan 5 porciones diarias</p>
-              <ol>
-<li class="bold-text"> Espinacas: 2 taza cruda o 1/2 taza cocida.</li>
-<li class="bold-text">Brócoli: 1 taza cruda o 1/2 taza cocida.</li>
-<li class="bold-text">Zanahorias: 1/2 taza picada cruda a o 1/2 taza rallada.</li>
-<li class="bold-text">Calabacitas (zucchini): 1 pieza mediana o 1/2 taza cocida.</li>
-<li class="bold-text">Pimientos: 1 pieza mediana o 1/2 taza picada.</li>
-<li class="bold-text">Tomates: 1 pieza mediana o 1/2 taza picada.</li>
-<li class="bold-text">Ejotes (judías verdes): 1/2 taza cocida. </li>
-<li class="bold-text" >1/2 pieza mediana o 1/4 taza picada.</li> 
-<li class="bold-text">Champiñones: 1/2 taza crudos o cocidos.</li>
-<li class="bold-text">Pepino: 1/2 pieza mediana o 1 taza en rodajas.</li>
-</ol>
-          </div>
-        </div>
+    <div class="select-container">
+        
+        <h1 class="titulo">Seleccione si quiere ser conductor o alumno </h1>
+
+        <p>si elije ser alumno sera al que transporten</p>
+        <select id="paginaSelect" onchange="redirigir()">
+            <option value="">-- Selecciona una opción --</option>
+            <option value="pagina4p2.html">Conductor</option>
+            <option value="pagina5p2.html">Alumno</option>
+        </select>
+</div>
     </div>
+    <div class="background">
+        
+        <a href="pagina2.html" class="button">regresar</a>
+        
+    </div>
+    <script>
+        function redirigir() {
+            var seleccion = document.getElementById("paginaSelect").value;
+            if(seleccion) {
+                window.location.href = seleccion;
+            }
+        }
+        </script>
 </body>
 </html>
+
 
 
