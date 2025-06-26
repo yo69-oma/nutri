@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Conductor-Alumno</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    #chatBox {
+      border: 1px solid #000;
+      padding: 10px;
+      height: 200px;
+      overflow-y: scroll;
+      margin-bottom: 15px;
+      background: #fff;
+    }
+    .msg {
+      margin-bottom: 10px;
+    }
+    .sender {
+      font-weight: bold;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Chat entre Conductor y Alumno</h1>
+  <div id="chatBox"></div>
+
+  <label for="role">Soy:</label>
+  <select id="role">
+    <option value="Conductor">Conductor</option>
+    <option value="Alumno">Alumno</option>
+  </select>
+
+  <label for="mensaje">Mensaje:</label>
+  <textarea id="mensaje" rows="3" placeholder="Escribe tu mensaje..."></textarea>
+
+  <button onclick="enviarMensaje()">Enviar mensaje</button>
+
+  <script>
+    function cargarMensajes() {
+      const chatBox = document.getElementById("chatBox");
+      chatBox.innerHTML = "";
+      const mensajes = JSON.parse(localStorage.getItem("mensajes")) || [];
+      mensajes.forEach(m => {
+        const div = document.createElement("div");
+        div.className = "msg";
+        div.innerHTML = `<span class="sender">${m.usuario}:</span> ${m.texto}`;
+        chatBox.appendChild(div);
+      });
+    }
+
+    function enviarMensaje() {
+      const rol = document.getElementById("role").value;
+      const texto = document.getElementById("mensaje").value.trim();
+      if (!texto) return;
+      const mensajes = JSON.parse(localStorage.getItem("mensajes")) || [];
+      mensajes.push({ usuario: rol, texto });
+      localStorage.setItem("mensajes", JSON.stringify(mensajes));
+      document.getElementById("mensaje").value = "";
+      cargarMensajes();
+    }
+
+    window.onload = cargarMensajes;
+  </script>
+</body>
+</html>
