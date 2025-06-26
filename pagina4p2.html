@@ -17,18 +17,18 @@
       text-align: center;
     }
     .button {
-            display: inline-block;
-            padding: 7px 10px;
-            background-color: #000000;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 4px;
-            margin-top: 20px;
-            margin-left: 239px ;
-        }
-        .button:hover {
-            background-color: #f9f9f9;
-        }
+      display: inline-block;
+      padding: 7px 10px;
+      background-color: #000000;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-top: 20px;
+      margin-left: 239px;
+    }
+    .button:hover {
+      background-color: #f9f9f9;
+    }
     label {
       display: block;
       margin-top: 10px;
@@ -51,6 +51,7 @@
     }
     button:hover {
       background-color: #ffffff;
+      color: #000;
     }
     .preview {
       margin-top: 10px;
@@ -69,8 +70,8 @@
     <label for="nombre">Nombre completo:</label>
     <input type="text" id="nombre" name="nombre" required>
 
-    <label for="identificacion">Numero de Placas:</label>
-    <input type="text" id="identificacion" name="identificacion" required pattern="\\d+">
+    <label for="identificacion">Número de Placas:</label>
+    <input type="text" id="identificacion" name="identificacion" required pattern="^[A-Z]{3}-?\d{3,4}$" placeholder="Ej: ABC123 o ABC-1234">
 
     <label for="colorVehiculo">Color del coche:</label>
     <input type="text" id="colorVehiculo" name="colorVehiculo" required>
@@ -78,43 +79,48 @@
     <label for="fotoCoche">Foto del coche:</label>
     <input type="file" id="fotoCoche" name="fotoCoche" accept="image/*" required>
 
-
-
     <button type="button" onclick="mostrarPrevisualizacion()">Ver fotos cargadas</button>
     <div class="preview" id="previsualizacion"></div>
 
-    <button type="submit"  a href="pagina6p4.html">Enviar registro</button>
+    <button type="submit">Enviar registro</button>
   </form>
-<div class="background">
-        
-        <a href="pagina3p2.html" class="button">regresar</a>
-        
-    </div>
+
+  <div class="background">
+    <a href="pagina3p2.html" class="button">regresar</a>
+  </div>
+
   <script>
-    
     // Validación y envío
     document.getElementById("registroConductor").addEventListener("submit", function(event) {
-      const id = document.getElementById("identificacion").value;
-      if (!/^\d+$/.test(id)) {
-        alert("La identificación debe ser numérica.");
+      const id = document.getElementById("identificacion").value.trim().toUpperCase();
+      const regexPlacas = /^[A-Z]{3}-?\d{3,4}$/;
+
+      if (!regexPlacas.test(id)) {
+        alert("El número de placas debe tener el formato: ABC123 o ABC-1234.");
         event.preventDefault();
         return;
       }
 
+      const nombre = document.getElementById("nombre").value;
+      const color = document.getElementById("colorVehiculo").value;
+
+      localStorage.setItem("conductor", JSON.stringify({
+        nombre: nombre,
+        placas: id,
+        color: color
+      }));
+
+      event.preventDefault(); // Evita recarga automática
       alert("¡Registro enviado correctamente!");
-      localStorage.setItem("conductor", JSON.stringify({ nombre: document.getElementById("nombre").value, placas: document.getElementById("identificacion").value, color: document.getElementById("colorVehiculo").value }));
       window.location.href = "chat.html";
-      // Aquí podrías enviar al servidor si quieres
     });
 
     // Previsualización de imágenes
     function mostrarPrevisualizacion() {
       const preview = document.getElementById("previsualizacion");
-      preview.innerHTML = ""; // Limpiar antes de mostrar nuevas imágenes
+      preview.innerHTML = "";
 
       const fotoCoche = document.getElementById("fotoCoche").files[0];
-      
-
       if (fotoCoche) {
         const imgCoche = document.createElement("img");
         imgCoche.src = URL.createObjectURL(fotoCoche);
@@ -124,7 +130,6 @@
         preview.appendChild(document.createTextNode("Foto del coche:"));
         preview.appendChild(imgCoche);
       }
-
     }
   </script>
 </body>
