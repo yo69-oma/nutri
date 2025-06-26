@@ -14,18 +14,18 @@
       background-color: #ffffff;
     }
     .button {
-            display: inline-block;
-            padding: 7px 10px;
-            background-color: #000000;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 4px;
-            margin-top: 20px;
-            margin-left: 239px ;
-        }
-        .button:hover {
-            background-color: #f9f9f9;
-        }
+      display: inline-block;
+      padding: 7px 10px;
+      background-color: #000000;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-top: 20px;
+      margin-left: 239px;
+    }
+    .button:hover {
+      background-color: #f9f9f9;
+    }
     h1 {
       text-align: center;
     }
@@ -58,8 +58,8 @@
   </style>
 </head>
 <body>
-  <h1>Registro de datos </h1>
-  <form id="solicitudCoche" action="solicitar.php" method="POST">
+  <h1>Registro de datos</h1>
+  <form id="solicitudCoche">
     <label for="nombreUsuario">Nombre completo:</label>
     <input type="text" id="nombreUsuario" name="nombreUsuario" required>
 
@@ -68,28 +68,39 @@
       type="tel" 
       id="telefono" 
       name="telefono" 
-      pattern="\\d{10}" 
+      pattern="\d{10}" 
       required>
 
     <label for="notas">Notas adicionales:</label>
     <textarea id="notas" name="notas" rows="3" placeholder="si es que llevas algo etc."></textarea>
 
-    <button type="submit" a href="pagina7p5.html">Solicitar coche</button>
+    <button type="submit">Solicitar coche</button>
   </form>
-<div class="background">
-        
-        <a href="pagina3p2.html" class="button">regresar</a>
-        
-    </div>
+
+  <div class="background">
+    <a href="pagina3p2.html" class="button">regresar</a>
+  </div>
+
   <script>
     document.getElementById("solicitudCoche").addEventListener("submit", function(event) {
-      const telefono = document.getElementById("telefono").value;
+      const telefono = document.getElementById("telefono").value.trim();
       if (!/^\d{10}$/.test(telefono)) {
         alert("El número de contacto debe tener exactamente 10 dígitos y ser numérico.");
-        event.preventDefault();
-        localStorage.setItem("alumno", JSON.stringify({ nombre: document.getElementById("nombreUsuario").value, telefono: telefono, notas: document.getElementById("notas").value }));
-        window.location.href = "chat.html";  
+        event.preventDefault(); // Detiene el envío si es incorrecto
+        return;
       }
+
+      // Guardar datos y redirigir si todo es correcto
+      const nombre = document.getElementById("nombreUsuario").value;
+      const notas = document.getElementById("notas").value;
+      localStorage.setItem("alumno", JSON.stringify({
+        nombre: nombre,
+        telefono: telefono,
+        notas: notas
+      }));
+
+      event.preventDefault(); // Evita el envío real
+      window.location.href = "chat.html";
     });
   </script>
 </body>
