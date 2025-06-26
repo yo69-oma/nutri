@@ -1,104 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lista desplegable con redirección</title>
-<style>
+  <meta charset="UTF-8">
+  <title>Solicitud de Coche</title>
+  <style>
     body {
-        font-family: Arial, sans-serif;
-    }
-
-    ul, ol {
-        
-        margin-left: 10px;
-    }
-    li {
-        margin-bottom: 5px;
-    }
-    .bold-text {
-        font-weight: bold;
-    }
-    .body {
-        
-        text-align: center;
-    }
-
-    
-</style>
-<style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-    }
-    .background {
-        background-image: url('https://i.pinimg.com/564x/a8/ee/53/a8ee53ce1c246dc8ac94587ee5cf789b.jpg');
-        background-size: cover;
-        background-position: center;
-        height: 100vh; /* Ajusta la altura como prefieras */
-        position: relative; /* Para que los elementos hijos se posicionen relativos a este */
-    }
-    .select-container {
-        position: absolute;
-        top: 300px;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: rgba(255, 255, 255, 0.225); /* Color de fondo semi-transparente */
-        padding: 20px;
-        max-width: 500px; /* Ancho máximo del select */
-        width: 100%;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
-    }
-    .select-container select {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ffffff3c;
-        border-radius: 5px;
-        font-size: 16px;
-        background-color: #ffffff66; /* Fondo del select */
-        color: #000000; /* Color del texto del select */
-        appearance: none; /* Elimina el estilo nativo del select */
-        -webkit-appearance: none;
-        -moz-appearance: none;
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #fcfcfc;
+      border-radius: 10px;
+      background-color: #ffffff;
     }
     .button {
             display: inline-block;
             padding: 7px 10px;
-            background-color: #f462ea;
-            color: #000000;
+            background-color: #000000;
+            color: #ffffff;
             text-decoration: none;
             border-radius: 4px;
-            margin-top: 600px;
+            margin-top: 20px;
+            margin-left: 239px ;
         }
         .button:hover {
             background-color: #f9f9f9;
         }
-</style>
-
+    h1 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      width: 100%;
+      background-color: #000000;
+      color: rgb(255, 255, 255);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #000000;
+    }
+    small {
+      color: #555;
+    }
+  </style>
 </head>
 <body>
-    <div class="background">
-        <a href="pagina2.html" class="button">regresar</a>
-        <div class="select-container">
-            <div class="text-overlay">
-              <h2 class="body">Cereales</h2>
-              <p class="body">Sin grasas</p>
-              <p class="body">Se recomienda 6  a 8 porciones diarias </p>
-              <ol  >
-               <li class="bold-text">1.	Arroz blanco: 1/2 taza cocida.</li>
-<li class="bold-text">Avena en hojuelas: 1/2 taza cocida.</li>
-<li class="bold-text">Cereal de maíz (tipo corn flakes): 1 taza.</li>
-<li class="bold-text">Cereal de trigo (tipo wheat flakes): 1 taza.</li>
-<li class="bold-text">Cereal de arroz (tipo rice flakes): 1 taza.</li>
-<li class="bold-text">Pan blanco: 1 rebanada.</li>
-<li class="bold-text">Pan integral: 1 rebanada. </li>
-<li class="bold-text">Tortilla de maíz: 1 pieza mediana.</li> 
-<li class="bold-text">Tortilla de harina: 1 pieza mediana.</li>
-<li class="bold-text">Pasta (espagueti, macarrones, etc.): 1/2 taza cocida.</li>
-</ol>
-          </div>
-        </div>
+  <h1>Registro de datos </h1>
+  <form id="solicitudCoche" action="solicitar.php" method="POST">
+    <label for="nombreUsuario">Nombre completo:</label>
+    <input type="text" id="nombreUsuario" name="nombreUsuario" required>
+
+    <label for="telefono">Número de contacto:</label>
+    <input 
+      type="tel" 
+      id="telefono" 
+      name="telefono" 
+      pattern="\\d{10}" 
+      required>
+
+    <label for="notas">Notas adicionales:</label>
+    <textarea id="notas" name="notas" rows="3" placeholder="si es que llevas algo etc."></textarea>
+
+    <button type="submit" a href="pagina7p5.html">Solicitar coche</button>
+  </form>
+<div class="background">
+        
+        <a href="pagina3p2.html" class="button">regresar</a>
+        
     </div>
+  <script>
+    document.getElementById("solicitudCoche").addEventListener("submit", function(event) {
+      const telefono = document.getElementById("telefono").value;
+      if (!/^\d{10}$/.test(telefono)) {
+        alert("El número de contacto debe tener exactamente 10 dígitos y ser numérico.");
+        event.preventDefault();
+        localStorage.setItem("alumno", JSON.stringify({ nombre: document.getElementById("nombreUsuario").value, telefono: telefono, notas: document.getElementById("notas").value }));
+        window.location.href = "chat.html";  
+      }
+    });
+  </script>
 </body>
 </html>
