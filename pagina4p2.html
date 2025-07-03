@@ -34,20 +34,34 @@
       }
 
       localStorage.setItem("placas_chat", placas);
-      navigator.geolocation.watchPosition(position => {
-        db.ref("conductores_disponibles/" + placas).set({
-          nombre: nombre,
-          placas: placas,
-          color: color,
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-          disponible: true
-        });
-      }, () => alert("Error al obtener ubicación"), { enableHighAccuracy: true });
 
-      alert("Registro completado. Compartiendo ubicación en tiempo real.");
-   window.location.href = "aceptar_viaje_conductor.html";
+      navigator.permissions.query({ name: 'geolocation' }).then(function(result) {
+        if (result.state === 'granted' || result.state === 'prompt') {
+          obtenerUbicacion();
+        } else {
+          alert("Debes activar la ubicación para registrar tu coche.");
+        }
+      }).catch(() => {
+        obtenerUbicacion(); // Por si no soporta la API
+      });
 
+      function obtenerUbicacion() {
+        navigator.geolocation.watchPosition(position => {
+          db.ref("conductores_disponibles/" + placas).set({
+            nombre: nombre,
+            placas: placas,
+            color: color,
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            disponible: true
+          });
+        }, error => {
+          alert("Error al obtener la ubicación: " + error.message);
+        }, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
+
+        alert("Registro completado. Compartiendo ubicación en tiempo real.");
+        window.location.href = "aceptar_viaje_conductor.html";
+      }
     }
   </script>
 </body>
