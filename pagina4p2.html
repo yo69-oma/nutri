@@ -2,135 +2,78 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Registro de Conductor</title>
+  <title>Registro de Conductor con Foto</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      background-color: #f9f9f9;
-    }
-    h1 {
-      text-align: center;
-    }
-    .button {
-      display: inline-block;
-      padding: 7px 10px;
-      background-color: #000000;
-      color: #ffffff;
-      text-decoration: none;
-      border-radius: 4px;
-      margin-top: 20px;
-      margin-left: 239px;
-    }
-    .button:hover {
-      background-color: #f9f9f9;
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    input, select {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      width: 100%;
-      background-color: #000000;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #ffffff;
-      color: #000;
-    }
-    .preview {
-      margin-top: 10px;
-    }
-    .preview img {
-      max-width: 100%;
-      margin-top: 5px;
-      border: 1px solid #000000;
-      border-radius: 5px;
-    }
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9; }
+    h1 { text-align: center; }
+    input, button { width: 100%; padding: 8px; margin-top: 10px; }
   </style>
 </head>
 <body>
   <h1>Registro de Conductor</h1>
   <form id="registroConductor">
-    <label for="nombre">Nombre completo:</label>
-    <input type="text" id="nombre" name="nombre" required>
-
-    <label for="identificacion">Número de Placas:</label>
-    <input type="text" id="identificacion" name="identificacion" required pattern="^[A-Z]{3}-?\d{3,4}$" placeholder="Ej: ABC123 o ABC-1234">
-
-    <label for="colorVehiculo">Color del coche:</label>
-    <input type="text" id="colorVehiculo" name="colorVehiculo" required>
-
-    <label for="fotoCoche">Foto del coche:</label>
-    <input type="file" id="fotoCoche" name="fotoCoche" accept="image/*" required>
-
-    <button type="button" onclick="mostrarPrevisualizacion()">Ver fotos cargadas</button>
-    <div class="preview" id="previsualizacion"></div>
-
-    <button type="submit">Enviar registro</button>
+    <input type="text" id="nombre" placeholder="Nombre completo" required>
+    <input type="text" id="identificacion" placeholder="Número de Placas" required pattern="^[A-Z]{3}-?\d{3,4}$">
+    <input type="text" id="colorVehiculo" placeholder="Color del coche" required>
+    <input type="file" id="fotoCoche" accept="image/*" required>
+    <button type="submit">Registrar Conductor</button>
   </form>
 
-  <div class="background">
-    <a href="pagina3p2.html" class="button">regresar</a>
-  </div>
-
   <script>
-    // Validación y envío
-    document.getElementById("registroConductor").addEventListener("submit", function(event) {
-      const id = document.getElementById("identificacion").value.trim().toUpperCase();
-      const regexPlacas = /^[A-Z]{3}-?\d{3,4}$/;
+    // Configuración Firebase (usa la tuya aquí)
+    const firebaseConfig = {
+      apiKey: "AIzaSyC0BFVj9mYHUUqpe1Ci5MRIUZQQ_6Dnb1I",
+      authDomain: "uniride-4f29a.firebaseapp.com",
+      databaseURL: "https://uniride-4f29a-default-rtdb.firebaseio.com",
+      projectId: "uniride-4f29a",
+      storageBucket: "uniride-4f29a.appspot.com",
+      messagingSenderId: "389865966071",
+      appId: "1:389865966071:web:8cd4aefab70cee411c06f2",
+      measurementId: "G-RX8X94WTRT"
+    };
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const storage = firebase.storage();
 
-      if (!regexPlacas.test(id)) {
-        alert("El número de placas debe tener el formato: ABC123 o ABC-1234.");
-        event.preventDefault();
+    document.getElementById("registroConductor").addEventListener("submit", async function(event) {
+      event.preventDefault();
+      
+      const nombre = document.getElementById("nombre").value;
+      const placas = document.getElementById("identificacion").value.toUpperCase();
+      const color = document.getElementById("colorVehiculo").value;
+      const fotoArchivo = document.getElementById("fotoCoche").files[0];
+
+      if (!/^[A-Z]{3}-?\d{3,4}$/.test(placas)) {
+        alert("Número de placas inválido.");
         return;
       }
 
-      const nombre = document.getElementById("nombre").value;
-      const color = document.getElementById("colorVehiculo").value;
+      // Subir la imagen a Firebase Storage
+      const storageRef = storage.ref('fotos_conductores/' + placas + '_' + Date.now());
+      const uploadTask = storageRef.put(fotoArchivo);
 
-      localStorage.setItem("conductor", JSON.stringify({
-        nombre: nombre,
-        placas: id,
-        color: color
-      }));
+      uploadTask.on('state_changed', 
+        null,
+        (error) => { alert('Error al subir la imagen: ' + error.message); },
+        async () => {
+          const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+          
+          // Guardar datos en Realtime Database
+          await db.ref('conductores').push({
+            nombre: nombre,
+            placas: placas,
+            color: color,
+            fotoURL: downloadURL
+          });
 
-      event.preventDefault(); // Evita recarga automática
-      alert("¡Registro enviado correctamente!");
-      window.location.href = "chat.html";
-    });
-
-    // Previsualización de imágenes
-    function mostrarPrevisualizacion() {
-      const preview = document.getElementById("previsualizacion");
-      preview.innerHTML = "";
-
-      const fotoCoche = document.getElementById("fotoCoche").files[0];
-      if (fotoCoche) {
-        const imgCoche = document.createElement("img");
-        imgCoche.src = URL.createObjectURL(fotoCoche);
-        imgCoche.onload = function() {
-          URL.revokeObjectURL(this.src);
+          alert('Registro exitoso.');
+          window.location.href = 'chat_firebase.html';
         }
-        preview.appendChild(document.createTextNode("Foto del coche:"));
-        preview.appendChild(imgCoche);
-      }
-    }
+      );
+    });
   </script>
 </body>
 </html>
