@@ -28,32 +28,44 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-
     let ubicacionAlumno = null;
     let watchId = null;
 
     document.getElementById("btnUbicacion").addEventListener("click", function() {
       const estado = document.getElementById("estadoUbicacion");
-      estado.textContent = "Obteniendo ubicación en tiempo real...";
-      if (watchId !== null) {
-        navigator.geolocation.clearWatch(watchId);
-      }
-      watchId = navigator.geolocation.watchPosition(function(pos) {
-        ubicacionAlumno = {
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude
-        };
-        estado.textContent = `Ubicación actualizada: Lat ${ubicacionAlumno.lat.toFixed(5)}, Lng ${ubicacionAlumno.lng.toFixed(5)}`;
-        document.getElementById("btnSolicitar").disabled = false;
+      estado.textContent = "Comprobando permisos...";
 
-        // Si ya se ingresó el nombre, actualiza en Firebase en tiempo real
-        const nombre = document.getElementById("nombre").value;
-        if (nombre) {
-          db.ref("alumnos_ubicaciones/" + nombre).set(ubicacionAlumno);
+      navigator.permissions.query({ name: 'geolocation' }).then(function(result) {
+        if (result.state === 'granted' || result.state === 'prompt') {
+          iniciarUbicacion();
+        } else {
+          alert("Debes habilitar la ubicación en la configuración de tu app o navegador.");
         }
-      }, function() {
-        estado.textContent = "No se pudo obtener la ubicación. Permite el acceso a la ubicación e inténtalo de nuevo.";
-      }, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
+      }).catch(() => {
+        iniciarUbicacion(); // Si el navegador no soporta la API de permisos
+      });
+
+      function iniciarUbicacion() {
+        estado.textContent = "Obteniendo ubicación en tiempo real...";
+        if (watchId !== null) {
+          navigator.geolocation.clearWatch(watchId);
+        }
+        watchId = navigator.geolocation.watchPosition(function(pos) {
+          ubicacionAlumno = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+          };
+          estado.textContent = `Ubicación actualizada: Lat ${ubicacionAlumno.lat.toFixed(5)}, Lng ${ubicacionAlumno.lng.toFixed(5)}`;
+          document.getElementById("btnSolicitar").disabled = false;
+
+          const nombre = document.getElementById("nombre").value;
+          if (nombre) {
+            db.ref("alumnos_ubicaciones/" + nombre).set(ubicacionAlumno);
+          }
+        }, function() {
+          estado.textContent = "No se pudo obtener la ubicación. Permite el acceso a la ubicación e inténtalo de nuevo.";
+        }, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
+      }
     });
 
     document.getElementById("registroAlumno").addEventListener("submit", function(event) {
@@ -67,15 +79,12 @@
         return;
       }
 
-      // Guardar datos en localStorage
       localStorage.setItem("alumno_datos", JSON.stringify({ nombre, telefono, notas }));
 
-      // Guardar ubicación en Firebase (ya se está actualizando en tiempo real, pero aseguramos el último valor)
       db.ref("alumnos_ubicaciones/" + nombre).set(ubicacionAlumno, function(error) {
         if (error) {
           document.getElementById("estadoUbicacion").textContent = "Error al guardar la ubicación. Intenta de nuevo.";
         } else {
-          // Detener el watch de ubicación al pasar a la siguiente página
           if (watchId !== null) {
             navigator.geolocation.clearWatch(watchId);
           }
@@ -86,4 +95,3 @@
   </script>
 </body>
 </html>
-
