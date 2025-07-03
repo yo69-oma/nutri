@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat UniRide (Firebase)</title>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    #chatBox {
+      border: 1px solid #000;
+      padding: 10px;
+      height: 300px;
+      overflow-y: scroll;
+      margin-bottom: 15px;
+      background: #fff;
+    }
+    .msg {
+      margin-bottom: 10px;
+    }
+    .sender {
+      font-weight: bold;
+    }
+    textarea, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>Chat UniRide</h1>
+  <div id="chatBox"></div>
+
+  <label for="role">Soy:</label>
+  <select id="role">
+    <option value="Alumno">Alumno</option>
+    <option value="Conductor">Conductor</option>
+  </select>
+
+  <label for="mensaje">Mensaje:</label>
+  <textarea id="mensaje" rows="3" placeholder="Escribe tu mensaje..."></textarea>
+
+  <button onclick="enviarMensaje()">Enviar mensaje</button>
+
+  <script>
+    // Configuración de tu proyecto Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyC0BFVj9mYHUUqpe1Ci5MRIUZQQ_6Dnb1I",
+      authDomain: "uniride-4f29a.firebaseapp.com",
+      databaseURL: "https://uniride-4f29a-default-rtdb.firebaseio.com",
+      projectId: "uniride-4f29a",
+      storageBucket: "uniride-4f29a.firebasestorage.app",
+      messagingSenderId: "389865966071",
+      appId: "1:389865966071:web:8cd4aefab70cee411c06f2",
+      measurementId: "G-RX8X94WTRT"
+    };
+
+    // Inicializar Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Mostrar mensajes en tiempo real
+    const chatBox = document.getElementById("chatBox");
+    db.ref("chat/mensajes").on("child_added", function(snapshot) {
+      const msg = snapshot.val();
+      const div = document.createElement("div");
+      div.className = "msg";
+      div.innerHTML = `<span class="sender">${msg.usuario}:</span> ${msg.mensaje}`;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+
+    // Enviar mensaje
+    function enviarMensaje() {
+      const usuario = document.getElementById("role").value;
+      const mensaje = document.getElementById("mensaje").value.trim();
+      if (!mensaje) return;
+
+      db.ref("chat/mensajes").push({
+        usuario: usuario,
+        mensaje: mensaje
+      });
+
+      document.getElementById("mensaje").value = "";
+    }
+  </script>
+</body>
+</html>
