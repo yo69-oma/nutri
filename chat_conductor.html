@@ -3,86 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <title>Chat Conductor</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      background-color: #f9f9f9;
-    }
-    h1 {
-      text-align: center;
-    }
-    #chatBox {
-      border: 1px solid #000;
-      padding: 10px;
-      height: 200px;
-      overflow-y: scroll;
-      margin-bottom: 15px;
-      background: #fff;
-    }
-    .msg {
-      margin-bottom: 10px;
-    }
-    .sender {
-      font-weight: bold;
-    }
-    textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      background-color: #000;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #333;
-    }
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background-color: #f9f9f9; }
+    #chatBox { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; margin-bottom: 15px; background: #fff; }
+    textarea, button { width: 100%; padding: 10px; margin-top: 10px; }
   </style>
 </head>
 <body>
   <h1>Chat Conductor</h1>
   <div id="chatBox"></div>
 
-  <label for="mensaje">Mensaje:</label>
-  <textarea id="mensaje" rows="3" placeholder="Escribe tu mensaje..."></textarea>
-
+  <textarea id="mensaje" placeholder="Escribe tu mensaje..."></textarea>
   <button onclick="enviarMensaje()">Enviar mensaje</button>
 
   <script>
-    function cargarMensajes() {
-      const chatBox = document.getElementById("chatBox");
-      chatBox.innerHTML = "";
-      const mensajes = JSON.parse(localStorage.getItem("mensajes_conductor")) || [];
-      mensajes.forEach(m => {
-        const div = document.createElement("div");
-        div.className = "msg";
-        div.innerHTML = `<span class="sender">Conductor:</span> ${m}`;
-        chatBox.appendChild(div);
-      });
-    }
+    const firebaseConfig = { /* TU CONFIGURACIÓN FIREBASE */ };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const placas = localStorage.getItem("placas_chat");
+    const refSala = db.ref("chat/sala_" + placas);
+    const chatBox = document.getElementById("chatBox");
+
+    refSala.on("child_added", snapshot => {
+      const msg = snapshot.val();
+      const div = document.createElement("div");
+      div.textContent = `${msg.usuario}: ${msg.mensaje}`;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
 
     function enviarMensaje() {
-      const texto = document.getElementById("mensaje").value.trim();
-      if (!texto) return;
-      const mensajes = JSON.parse(localStorage.getItem("mensajes_conductor")) || [];
-      mensajes.push(texto);
-      localStorage.setItem("mensajes_conductor", JSON.stringify(mensajes));
+      const mensaje = document.getElementById("mensaje").value.trim();
+      if (!mensaje) return;
+      refSala.push({ usuario: "Conductor", mensaje });
       document.getElementById("mensaje").value = "";
-      cargarMensajes();
     }
-
-    window.onload = cargarMensajes;
   </script>
 </body>
 </html>
