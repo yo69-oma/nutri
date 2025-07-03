@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Aceptar o Rechazar Viaje</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background-color: #f9f9f9; }
+    .info { margin-bottom: 15px; padding: 15px; background: #fff; border: 1px solid #ccc; border-radius: 5px; }
+    button { width: 48%; padding: 10px; margin-top: 10px; }
+    .btns { display: flex; justify-content: space-between; }
+  </style>
+</head>
+<body>
+  <h1>Solicitud de Viaje</h1>
+
+  <div id="map" style="width: 100%; height: 300px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc;"></div>
+  <div id="infoSolicitud"></div>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY_GOOGLE_MAPS"></script>
+  <script>
+    const firebaseConfig = { /* TU CONFIGURACIÓN FIREBASE */ };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const placas = localStorage.getItem("placas_chat");
+    const refSolicitud = db.ref("solicitudes_viaje/" + placas);
+
+    let map;
+    let alumnoMarker;
+
+    refSolicitud.once("value", snapshot => {
+      const solicitud = snapshot.val();
+      if (solicitud) {
+        const infoDiv = document.getElementById("infoSolicitud");
+        infoDiv.innerHTML = `
+          <div class="info">
+            <strong>Alumno:</strong> ${solicitud.alumno} <br>
+            <strong>Teléfono:</strong> ${solicitud.telefono} <br>
+            <strong>Notas:</strong> ${solicitud.notas}
+            <div class="btns">
+              <button onclick=\"aceptarViaje()\">Aceptar</button>
+              <button onclick=\"rechazarViaje()\">Rechazar</button>
+            </div>
+          </div>
+        `;
+
+        // Buscar ubicación del alumno en la base de datos
+        db.ref("alumnos_ubicaciones/" + solicitud.alumno).once("value", snapUbicacion => {
+          const ubicacion = snapUbicacion.val();
+          if (ubicacion && ubicacion.lat && ubicacion.lng) {
+            map = new google.maps.Map(document.getElementById("map"), {
+              center: { lat: ubicacion.lat, lng: ubicacion.lng },
+              zoom: 15,
+              mapTypeControl: false,
+              streetViewControl: false
+            });
+            alumnoMarker = new google.maps.Marker({
+              position: { lat: ubicacion.lat, lng: ubicacion.lng },
+              map: map,
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 8,
+                fillColor: '#34A853',
+                fillOpacity: 1,
+                strokeWeight: 2,
+                strokeColor: '#fff'
+              },
+              title: "Ubicación del alumno"
+            });
+          } else {
+            document.getElementById("map").innerHTML = "No se encontró la ubicación del alumno.";
+          }
+        });
+      } else {
+        document.getElementById("infoSolicitud").innerHTML = "No tienes solicitudes de viaje por ahora.";
+        document.getElementById("map").style.display = "none";
+      }
+    });
+
+    function aceptarViaje() {
+      window.location.href = "chat_conductor.html";
+    }
+
+    function rechazarViaje() {
+      db.ref("solicitudes_viaje/" + placas).remove();
+      alert("Solicitud rechazada.");
+      window.location.href = "pagina_conductor.html";  // Puedes cambiar la página a donde regresará
+    }
+  </script>
+</body>
+</html>
