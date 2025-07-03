@@ -2,106 +2,88 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Solicitud de Coche</title>
+  <title>Registro de Alumno</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 20px;
-      border: 1px solid #fcfcfc;
-      border-radius: 10px;
-      background-color: #ffffff;
-    }
-    .button {
-      display: inline-block;
-      padding: 7px 10px;
-      background-color: #000000;
-      color: #ffffff;
-      text-decoration: none;
-      border-radius: 4px;
-      margin-top: 20px;
-      margin-left: 239px;
-    }
-    .button:hover {
-      background-color: #f9f9f9;
-    }
-    h1 {
-      text-align: center;
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-    }
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      width: 100%;
-      background-color: #000000;
-      color: rgb(255, 255, 255);
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #000000;
-    }
-    small {
-      color: #555;
-    }
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background-color: #ffffff; }
+    h1 { text-align: center; }
+    input, textarea, button { width: 100%; padding: 10px; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <h1>Registro de datos</h1>
-  <form id="solicitudCoche">
-    <label for="nombreUsuario">Nombre completo:</label>
-    <input type="text" id="nombreUsuario" name="nombreUsuario" required>
+  <h1>Registro de Alumno</h1>
 
-    <label for="telefono">Número de contacto:</label>
-    <input 
-      type="tel" 
-      id="telefono" 
-      name="telefono" 
-      pattern="\d{10}" 
-      required>
-
-    <label for="notas">Notas adicionales:</label>
-    <textarea id="notas" name="notas" rows="3" placeholder="si es que llevas algo etc."></textarea>
-
-    <button type="submit">Solicitar coche</button>
+  <form id="registroAlumno">
+    <input type="text" id="nombre" placeholder="Nombre completo" required>
+    <input type="tel" id="telefono" placeholder="Número de contacto" pattern="\d{10}" required>
+    <textarea id="notas" placeholder="Notas adicionales (opcional)"></textarea>
+    <button type="button" id="btnUbicacion">Compartir mi ubicación</button>
+    <button type="submit" id="btnSolicitar" disabled>Solicitar Coche</button>
+    <div id="estadoUbicacion" style="margin-top:10px;color:#388e3c;"></div>
   </form>
 
-  <div class="background">
-    <a href="pagina3p2.html" class="button">regresar</a>
-  </div>
-
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script>
-    document.getElementById("solicitudCoche").addEventListener("submit", function(event) {
-      const telefono = document.getElementById("telefono").value.trim();
-      if (!/^\d{10}$/.test(telefono)) {
-        alert("El número de contacto debe tener exactamente 10 dígitos y ser numérico.");
-        event.preventDefault(); // Detiene el envío si es incorrecto
+    const firebaseConfig = { /* TU CONFIGURACIÓN FIREBASE */ };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+
+    let ubicacionAlumno = null;
+    let watchId = null;
+
+    document.getElementById("btnUbicacion").addEventListener("click", function() {
+      const estado = document.getElementById("estadoUbicacion");
+      estado.textContent = "Obteniendo ubicación en tiempo real...";
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+      watchId = navigator.geolocation.watchPosition(function(pos) {
+        ubicacionAlumno = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude
+        };
+        estado.textContent = `Ubicación actualizada: Lat ${ubicacionAlumno.lat.toFixed(5)}, Lng ${ubicacionAlumno.lng.toFixed(5)}`;
+        document.getElementById("btnSolicitar").disabled = false;
+
+        // Si ya se ingresó el nombre, actualiza en Firebase en tiempo real
+        const nombre = document.getElementById("nombre").value;
+        if (nombre) {
+          db.ref("alumnos_ubicaciones/" + nombre).set(ubicacionAlumno);
+        }
+      }, function() {
+        estado.textContent = "No se pudo obtener la ubicación. Permite el acceso a la ubicación e inténtalo de nuevo.";
+      }, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
+    });
+
+    document.getElementById("registroAlumno").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const nombre = document.getElementById("nombre").value;
+      const telefono = document.getElementById("telefono").value;
+      const notas = document.getElementById("notas").value;
+
+      if (!ubicacionAlumno) {
+        document.getElementById("estadoUbicacion").textContent = "Primero comparte tu ubicación.";
         return;
       }
 
-      // Guardar datos y redirigir si todo es correcto
-      const nombre = document.getElementById("nombreUsuario").value;
-      const notas = document.getElementById("notas").value;
-      localStorage.setItem("alumno", JSON.stringify({
-        nombre: nombre,
-        telefono: telefono,
-        notas: notas
-      }));
+      // Guardar datos en localStorage
+      localStorage.setItem("alumno_datos", JSON.stringify({ nombre, telefono, notas }));
 
-      event.preventDefault(); // Evita el envío real
-      window.location.href = "chat_firebase.html";
+      // Guardar ubicación en Firebase (ya se está actualizando en tiempo real, pero aseguramos el último valor)
+      db.ref("alumnos_ubicaciones/" + nombre).set(ubicacionAlumno, function(error) {
+        if (error) {
+          document.getElementById("estadoUbicacion").textContent = "Error al guardar la ubicación. Intenta de nuevo.";
+        } else {
+          // Detener el watch de ubicación al pasar a la siguiente página
+          if (watchId !== null) {
+            navigator.geolocation.clearWatch(watchId);
+          }
+          window.location.href = "buscar_conductores.html";
+        }
+      });
     });
   </script>
 </body>
 </html>
+
