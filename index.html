@@ -1,68 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="srcipt.js"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniRide</title>
-    <style>
-        .container {
-            position: relative;
-            max-width: 200px; /* Máximo ancho de la imagen */
-            margin: 0 auto; /* Centra el contenedor horizontalmente */
-        }
-        .image {
-            width: 90%; /* Ajusta el ancho de la imagen */
-            height: 90%; /* Ajusta la altura automáticamente */
-        }
-  
-
-        body {
-            font-family: Arial, sans-serif; 
-            background-color: #f0f0f0;
-            padding: 20px;
-            text-align: center;
-        }
-        h1 {
-            color: #333333;
-        }
-        p {
-            color: #fff5f5;
-            line-height: 1.6;
-        }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #000000;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        .button:hover {
-            background-color: #000000;
-        }
-        
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniRide</title>
+  <style>
+    .container {
+      position: relative;
+      max-width: 200px;
+      margin: 0 auto;
+    }
+    .image {
+      width: 90%;
+      height: auto;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 { color: #333; }
+    p { color: #fff5f5; line-height: 1.6; }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #000;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+    .button:hover { background-color: #333; }
+  </style>
 </head>
-
 <body>
-    <div class="container">
-    <img class="image" 
-    src="https://i.pinimg.com/736x/f7/c9/9d/f7c99d5610bca58e4d186c4639dbd1e6.jpg">
-</div>
-   
-    <a href="pagina2.html" class="button">entrar</a>
+  <div class="container">
+    <img class="image" src="https://i.pinimg.com/736x/f7/c9/9d/f7c99d5610bca58e4d186c4639dbd1e6.jpg" alt="Logo UniRide">
+  </div>
+  <h1>Bienvenido a UniRide</h1>
+  <a href="pagina2.html" class="button">Entrar</a>
 
-</body>
+  <script>
+    // Detección automática de sesión guardada
+    const datosConductor = localStorage.getItem("conductor_datos");
+    const datosAlumno = localStorage.getItem("alumno_datos");
 
-  
+    if (datosConductor) {
+      // Si ya es conductor registrado
+      window.location.href = "aceptar_viaje_conductor.html";  // Llevarlo a su pantalla principal
+    } else if (datosAlumno) {
+      // Si ya es alumno registrado
+      window.location.href = "buscar_conductores.html";  // Llevarlo a la búsqueda de conductores
+    }
   </script>
 </body>
 </html>
-
- 
-</body>
-</html>
-
- 
