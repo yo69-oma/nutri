@@ -2,78 +2,53 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Registro de Conductor con Foto</title>
+  <title>Registro Conductor + GPS</title>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: #f9f9f9; }
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background-color: #f9f9f9; }
     h1 { text-align: center; }
-    input, button { width: 100%; padding: 8px; margin-top: 10px; }
+    input, button { width: 100%; padding: 10px; margin-top: 10px; }
   </style>
 </head>
 <body>
   <h1>Registro de Conductor</h1>
-  <form id="registroConductor">
-    <input type="text" id="nombre" placeholder="Nombre completo" required>
-    <input type="text" id="identificacion" placeholder="Número de Placas" required pattern="^[A-Z]{3}-?\d{3,4}$">
-    <input type="text" id="colorVehiculo" placeholder="Color del coche" required>
-    <input type="file" id="fotoCoche" accept="image/*" required>
-    <button type="submit">Registrar Conductor</button>
-  </form>
+  <input type="text" id="nombre" placeholder="Nombre completo" required>
+  <input type="text" id="placas" placeholder="Placas (Ej: ABC123 o ABC-1234)" required pattern="^[A-Z]{3}-?\d{3,4}$">
+  <input type="text" id="color" placeholder="Color del coche" required>
+  <button onclick="registrarConductor()">Registrar y Compartir Ubicación</button>
 
   <script>
-    // Configuración Firebase (usa la tuya aquí)
-    const firebaseConfig = {
-      apiKey: "AIzaSyC0BFVj9mYHUUqpe1Ci5MRIUZQQ_6Dnb1I",
-      authDomain: "uniride-4f29a.firebaseapp.com",
-      databaseURL: "https://uniride-4f29a-default-rtdb.firebaseio.com",
-      projectId: "uniride-4f29a",
-      storageBucket: "uniride-4f29a.appspot.com",
-      messagingSenderId: "389865966071",
-      appId: "1:389865966071:web:8cd4aefab70cee411c06f2",
-      measurementId: "G-RX8X94WTRT"
-    };
-    const app = firebase.initializeApp(firebaseConfig);
+    const firebaseConfig = { /* TU CONFIGURACIÓN FIREBASE */ };
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const storage = firebase.storage();
 
-    document.getElementById("registroConductor").addEventListener("submit", async function(event) {
-      event.preventDefault();
-      
+    function registrarConductor() {
       const nombre = document.getElementById("nombre").value;
-      const placas = document.getElementById("identificacion").value.toUpperCase();
-      const color = document.getElementById("colorVehiculo").value;
-      const fotoArchivo = document.getElementById("fotoCoche").files[0];
+      const placas = document.getElementById("placas").value.toUpperCase();
+      const color = document.getElementById("color").value;
 
-      if (!/^[A-Z]{3}-?\d{3,4}$/.test(placas)) {
-        alert("Número de placas inválido.");
+      if (!nombre || !placas || !color) {
+        alert("Completa todos los campos");
         return;
       }
 
-      // Subir la imagen a Firebase Storage
-      const storageRef = storage.ref('fotos_conductores/' + placas + '_' + Date.now());
-      const uploadTask = storageRef.put(fotoArchivo);
+      localStorage.setItem("placas_chat", placas);
+      navigator.geolocation.watchPosition(position => {
+        db.ref("conductores_disponibles/" + placas).set({
+          nombre: nombre,
+          placas: placas,
+          color: color,
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          disponible: true
+        });
+      }, () => alert("Error al obtener ubicación"), { enableHighAccuracy: true });
 
-      uploadTask.on('state_changed', 
-        null,
-        (error) => { alert('Error al subir la imagen: ' + error.message); },
-        async () => {
-          const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-          
-          // Guardar datos en Realtime Database
-          await db.ref('conductores').push({
-            nombre: nombre,
-            placas: placas,
-            color: color,
-            fotoURL: downloadURL
-          });
+      alert("Registro completado. Compartiendo ubicación en tiempo real.");
+   window.location.href = "aceptar_viaje_conductor.html";
 
-          alert('Registro exitoso.');
-          window.location.href = 'chat_firebase.html';
-        }
-      );
-    });
+    }
   </script>
 </body>
 </html>
