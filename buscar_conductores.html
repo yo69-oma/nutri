@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Buscar Conductores Cercanos</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; background-color: #f0f0f0; }
+    h1 { text-align: center; }
+    ul { padding-left: 0; list-style: none; }
+    li { margin-bottom: 10px; padding: 10px; background-color: #fff; border-radius: 5px; cursor: pointer; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>Conductores Cercanos</h1>
+
+  <div id="map" style="width: 100%; height: 350px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc;"></div>
+  <ul id="listaConductores"></ul>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=TU_API_KEY_GOOGLE_MAPS"></script>
+  <script>
+    const firebaseConfig = { /* TU CONFIGURACIÓN FIREBASE */ };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let map;
+    let alumnoMarker;
+    let conductorMarkers = {};
+
+    // Inicializar el mapa centrado en la ubicación del alumno
+    navigator.geolocation.getCurrentPosition(pos => {
+      const alumnoLat = pos.coords.latitude;
+      const alumnoLng = pos.coords.longitude;
+
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: alumnoLat, lng: alumnoLng },
+        zoom: 14,
+        mapTypeControl: false,
+        streetViewControl: false
+      });
+
+      alumnoMarker = new google.maps.Marker({
+        position: { lat: alumnoLat, lng: alumnoLng },
+        map: map,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: '#4285F4',
+          fillOpacity: 1,
+          strokeWeight: 2,
+          strokeColor: '#fff'
+        },
+        title: "Tu ubicación"
+      });
+
+      // Leer lista de conductores disponibles
+      db.ref("conductores_disponibles").on("value", snapshot => {
+        const lista = document.getElementById("listaConductores");
+        lista.innerHTML = "";
+        const datos = snapshot.val();
+
+        // Limpiar marcadores anteriores
+        for (const key in conductorMarkers) {
+          conductorMarkers[key].setMap(null);
+        }
+        conductorMarkers = {};
+
+    
+        for (const placas in datos) {
+          const c = datos[placas];
+          const dist = calcularDistancia(alumnoLat, alumnoLng, c.lat, c.lng);
+          const li = document.createElement("li");
+          li.textContent = `${c.nombre} (${c.placas}) - ${dist.toFixed(2)} km`;
+          li.onclick = () => {
+            const datosAlumno = JSON.parse(localStorage.getItem("alumno_datos"));
+            firebase.database().ref("solicitudes_viaje/" + c.placas).set({
+              alumno: datosAlumno.nombre,
+              telefono: datosAlumno.telefono,
+              notas: datosAlumno.notas
+            });
+            localStorage.setItem("placas_chat", c.placas);
+            window.location.href = "chat_alumno.html";
+          };
+          lista.appendChild(li);
+
+          // Agregar marcador del conductor
+          if (c.lat && c.lng) {
+            const marker = new google.maps.Marker({
+              position: { lat: c.lat, lng: c.lng },
+              map: map,
+              label: c.nombre[0],
+              title: `${c.nombre} (${c.placas})`
+            });
+            conductorMarkers[placas] = marker;
+          }
+        }
+      });
+    }, () => alert("No se pudo obtener tu ubicación"));
+
+    // Función para calcular la distancia (Haversine)
+    function calcularDistancia(lat1, lng1, lat2, lng2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLng = (lng2 - lng1) * Math.PI / 180;
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLng/2) * Math.sin(dLng/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+  </script>
+</body>
+</html>
